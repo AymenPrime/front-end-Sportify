@@ -1,0 +1,459 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+.content-matches {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background: #f0f0f0ad;
+  background-image: url('../assets//matches-back.avif');
+  background-size: cover;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.App {
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 10rem;
+
+}
+
+.header {
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+  position: fixed;
+}
+
+.header .logo {
+  color: black;
+  font-style: italic;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  color: black;
+}
+
+.header ul li {
+  color: black;
+}
+.header .logout {
+  padding: 10px;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
+.button-4 {
+  appearance: none;
+  background-color: #ad2a2a;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #f5f5f5;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 6px 16px;
+  position: relative;
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+  font-weight: bold;
+}
+
+.button-4:hover {
+  background-color: #ff0000;
+  text-decoration: none;
+  transition-duration: 0.1s;
+}
+
+.button-4:disabled {
+  background-color: #FAFBFC;
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959DA5;
+  cursor: default;
+}
+
+.button-4:active {
+  background-color: #EDEFF2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+
+.button-4:focus {
+  outline: 1px transparent;
+}
+
+.button-4:before {
+  display: none;
+}
+
+.button-4:-webkit-details-marker {
+  display: none;
+}
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.form-buttons button, .add-match-button {
+  background: #747373;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.form-buttons button:hover, .add-match-button:hover {
+  background: #444444;
+}
+
+.add-match-button:hover {
+  background: #444444;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.match {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+  color: rgb(0, 0, 0);
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255,0.2);
+  border-radius: 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  margin-top: 30px;
+  position: relative;
+}
+
+.teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.teams h3 {
+  font-size: 30px;
+  margin: 0 20px;
+  font-family: "Josefin Sans", serif;
+  font-optical-sizing: auto;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+  text-align: center;
+}
+
+.vs-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.vs-container h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.date-time {
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+  color: #0e0c0c;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.add-match-form {
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-match-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #e9d9d7;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form-match-overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.matches-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.matches-header h1 {
+  margin: 0;
+  color: black;
+  font-size: 2.5rem;
+}
+
+.matches-header .add-match-button {
+  background: #747373;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.matches-header .add-match-button:hover {
+  background: #444444;
+}
+
+.no-matches {
+  background-color: rgba(211, 211, 211, 0.521);
+  /* padding: 20px; */
+  margin-top: 40px;
+  border-radius: 20px;
+  height: 10vh;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.no-matches h1 {
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-match-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.delete-match-button:hover {
+  color: darkred;
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .teams h3 {
+    font-size: 24px;
+    max-width: 150px;
+  }
+
+  .vs-container h2 {
+    font-size: 22px;
+  }
+
+  .date-time {
+    font-size: 14px;
+  }
+
+  .add-match-form {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .add-match-form h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-group input {
+    max-width: 250px;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-buttons button, .add-match-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .matches-list {
+    gap: 15px;
+  }
+
+  .match {
+    width: 95%; 
+    padding: 15px;
+  }
+
+  .teams {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .teams h3 {
+    font-size: 18px;
+    max-width: 100%;
+  }
+
+  .vs-container h2 {
+    font-size: 16px; 
+  }
+
+  .date-time {
+    font-size: 12px;
+  }
+
+  .add-match-form {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .add-match-form h2 {
+    font-size: 1.2rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 8px; 
+    font-size: 0.9rem; 
+  }
+}
+
+
+@media (max-width: 320px) {
+  h1 {
+    font-size: 1.3rem; 
+  }
+
+  .teams h3 {
+    font-size: 16px; 
+  }
+  .vs-container h2 {
+    font-size: 14px; 
+  }
+
+  .date-time {
+    font-size: 10px; 
+  }
+
+  .add-match-form h2 {
+    font-size: 1rem; 
+  }
+
+  .form-group input {
+    font-size: 0.8rem; 
+  }
+}
