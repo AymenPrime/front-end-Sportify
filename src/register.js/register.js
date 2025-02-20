@@ -35,7 +35,7 @@ function RegisterPage({ setStatus }) {
     setIsLoading(true); // Set loading state
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/users/register', {
+      const response = await fetch('https://sportify-production.up.railway.app/api/users/register', {
         method: "POST",
         body: JSON.stringify({
           login: login,

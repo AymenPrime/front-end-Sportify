@@ -15,7 +15,7 @@ function LoginPage({ setStatus }) {
 
     try {
       // Step 1: Authenticate and get tokens
-      const tokenResponse = await fetch('http://127.0.0.1:8000/api/auth/token', {
+      const tokenResponse = await fetch('https://sportify-production.up.railway.app/api/auth/token', {
         method: "POST",
         body: JSON.stringify({
           login: username,
@@ -36,7 +36,7 @@ function LoginPage({ setStatus }) {
       localStorage.setItem("refreshToken", tokenData.refresh);
 
       // Step 2: Fetch user details
-      const userResponse = await fetch('http://localhost:8000/api/users/me', {
+      const userResponse = await fetch('https://sportify-production.up.railway.app/api/users/me', {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -61,6 +61,10 @@ function LoginPage({ setStatus }) {
     }
   };
 
+  const handleRegisterClick = () => {
+    navigate('/register'); // Navigate to the registration page
+  };
+
   return (
     <>
       <div className='content-login'>
@@ -69,6 +73,9 @@ function LoginPage({ setStatus }) {
           <source src={videoSource} type="video/mp4" />
         </video>
         <div className='login-page'>
+          <button onClick={handleRegisterClick} className="register-btn">
+            Register
+          </button>
           <div className="login-container">
             <form className="login-form">
               <h1 className="login-title">Login</h1>
@@ -95,11 +102,12 @@ function LoginPage({ setStatus }) {
                 placeholder="Enter your password"
                 className="login-input"
                 required
-              />
-
-              <button type="submit" onClick={HandleLogin} className="login-button">
-                Log In
-              </button>
+              />  
+              <div className='log-btn'>
+                <button type="submit" onClick={HandleLogin} className="login-button">
+                  Log In
+                </button>
+              </div>
             </form>
           </div>
         </div>

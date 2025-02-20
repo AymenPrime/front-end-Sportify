@@ -98,7 +98,6 @@ const Matches = ({ isAdmin, onLogout }) => {
             <ul>
               <li onClick={() => navigate('/teams')}>Teams</li>
               <li onClick={() => navigate('/matches')}>Matches</li>
-              <li onClick={() => navigate('/tables')}>Tables</li>
             </ul>
           </div>
           {isAdmin && (

@@ -99,7 +99,7 @@ export default function LandingPage({ isAdmin, onLogout }) {
         console.log("Player Data:", playerData);
 
         try {
-            const createPlayerResponse = await fetch('http://localhost:8000/api/players/create/', {
+            const createPlayerResponse = await fetch('https://sportify-production.up.railway.app/api/players/create/', {
                 method: "POST",
                 body: JSON.stringify(playerData),
                 headers: {
@@ -146,7 +146,6 @@ export default function LandingPage({ isAdmin, onLogout }) {
                             <ul>
                                 <li onClick={handleClickTeams}>Teams</li>
                                 <li onClick={handleClickMatches}>Matches</li>
-                                <li onClick={handleClickTables}>Tables</li>
                             </ul>
                         </div>
                         <div className='icons'>

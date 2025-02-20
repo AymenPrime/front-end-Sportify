@@ -36,7 +36,7 @@ export default function TeamsPage({ isAdmin, onLogout }) {
     // Function to fetch teams data
     const fetchTeams = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/teams', {
+            const response = await fetch('https://sportify-production.up.railway.app/api/teams', {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
@@ -198,7 +198,6 @@ export default function TeamsPage({ isAdmin, onLogout }) {
                             <ul>
                                 <li onClick={handleClickTeams}>Teams</li>
                                 <li onClick={handleClickMatches}>Matches</li>
-                                <li onClick={handleClickTables}>Tables</li>
                             </ul>
                         </div>
                         {isAdmin && (
