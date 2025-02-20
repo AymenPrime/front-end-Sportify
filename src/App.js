@@ -14,7 +14,7 @@ function App() {
 
 
   function setStatus(status) {
-    localStorage.setItem("isAdmin", status); 
+    localStorage.setItem("isAdmin", status);
     setAdmin(status); 
   }
 

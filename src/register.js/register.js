@@ -7,54 +7,61 @@ function RegisterPage({ setStatus }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [passwordC, setPasswordC] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
 
-  function Handleregister(e) {
+  const Handleregister = async (e) => {
     e.preventDefault();
-    
+    setError(""); // Clear any previous errors
+
+    // Validate inputs
     if (!login || !password || !passwordC) {
-      alert("All fields are required!");
+      setError("All fields are required!");
       return;
     }
 
     if (password.length < 8) {
-      alert("Password must be at least 8 characters long!");
+      setError("Password must be at least 8 characters long!");
       return;
     }
 
     if (password !== passwordC) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    
-    fetch('http://127.0.0.1:8000/api/token', {
-      method: "POST",
-      body: JSON.stringify({
-        login: login,
-        password: password,
-        passwordC: passwordC,
-      }),
-      headers: {
-        "Content-type": "application/json",
-        "Accept": "application/json",
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.access) {  
-          navigate('/');
-          setStatus(true);
-          sessionStorage.setItem("accessToken", data.access);  
-          sessionStorage.setItem("refreshToken", data.refresh);  
-          sessionStorage.setItem("username", login);  // Store the username
-          console.log("Tokens and username stored in sessionStorage!");
-        }
-      })
-      .catch(error => {
-        console.error("Error during registration:", error);
+
+    setIsLoading(true); // Set loading state
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/users/register', {
+        method: "POST",
+        body: JSON.stringify({
+          login: login,
+          password: password,
+          re_password: passwordC,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+        },
       });
-  }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Registration failed. Please try again.");
+      }
+
+      // Registration successful
+      navigate('/login'); // Redirect to login page
+    } catch (error) {
+      setError(error.message || "An error occurred during registration.");
+      console.error("Error during registration:", error);
+    } finally {
+      setIsLoading(false); // Reset loading state
+    }
+  };
 
   return (
     <div className='content-register'>
@@ -66,17 +73,45 @@ function RegisterPage({ setStatus }) {
         <div className="register-container">
           <form className="rgi-form" onSubmit={Handleregister}>
             <h1 className="register-title">Register</h1>
-            
+
+            {error && <div className="register-error">{error}</div>}
+
             <label htmlFor="username" className="register-label">Login</label>
-            <input type="text" value={login} onChange={(e) => setLogin(e.target.value)} id="username" placeholder="Enter your username" className="register-input" required />
+            <input
+              type="text"
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
+              id="username"
+              placeholder="Enter your username"
+              className="register-input"
+              required
+            />
 
             <label htmlFor="password" className="register-label">Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" placeholder="Enter your password" className="register-input" required />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              id="password"
+              placeholder="Enter your password"
+              className="register-input"
+              required
+            />
             
             <label htmlFor="passwordC" className="register-label">Confirm Your Password</label>
-            <input type="password" value={passwordC} onChange={(e) => setPasswordC(e.target.value)} id="passwordC" placeholder="Confirm Your Password" className="register-input" required />
+            <input
+              type="password"
+              value={passwordC}
+              onChange={(e) => setPasswordC(e.target.value)}
+              id="passwordC"
+              placeholder="Confirm Your Password"
+              className="register-input"
+              required
+            />
             
-            <button type="submit" className="register-button">Register</button>
+            <button type="submit" className="register-button" disabled={isLoading}>
+              {isLoading ? "Registering..." : "Register"}
+            </button>
           </form>
         </div>
       </div>

@@ -59,7 +59,12 @@ const Matches = ({ isAdmin, onLogout }) => {
     date: '',
     time: '',
   });
-
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    onLogout();
+    navigate('/login');
+  }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewMatch({
@@ -97,7 +102,7 @@ const Matches = ({ isAdmin, onLogout }) => {
             </ul>
           </div>
           {isAdmin && (
-            <button className="button-4" role="button" onClick={onLogout}>
+            <button className="button-4" role="button" onClick={handleLogout}>
               Logout
             </button>
           )}

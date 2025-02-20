@@ -1,42 +1,65 @@
-import React from 'react';
-import { useState } from 'react'
+import React, { useState } from 'react';
 import './login.css';
-import videoSource from '../assets/background-video.mp4'
+import videoSource from '../assets/background-video.mp4';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage({ setStatus }) {
-  const [login, getUsername] = useState("");
-  const [password, getPassword] = useState("");
-  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  function HandleLogin(e) {
+
+  const HandleLogin = async (e) => {
     e.preventDefault();
-    
-    fetch('http://127.0.0.1:8000/api/token', {
-      method: "POST",
-      body: JSON.stringify({
-        login: login,
-        password: password,
-      }),
-      headers: {
-        "Content-type": "application/json",
-        "Accept": "application/json",
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          setStatus(true);
-          sessionStorage.setItem("username", login);  // Store the username
-          navigate('/');
-        } else {
-          alert("Incorrect login or password!");
-        }
-        return response.json();
-      })
-      .catch(error => {
-        console.error("Error during login:", error);
+    setError(""); // Clear any previous errors
+
+    try {
+      // Step 1: Authenticate and get tokens
+      const tokenResponse = await fetch('http://127.0.0.1:8000/api/auth/token', {
+        method: "POST",
+        body: JSON.stringify({
+          login: username,
+          password: password,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+        },
       });
-  }
+
+      if (!tokenResponse.ok) {
+        throw new Error("Invalid username or password");
+      }
+
+      const tokenData = await tokenResponse.json();
+      localStorage.setItem("accessToken", tokenData.access);
+      localStorage.setItem("refreshToken", tokenData.refresh);
+
+      // Step 2: Fetch user details
+      const userResponse = await fetch('http://localhost:8000/api/users/me', {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Bearer ${tokenData.access}`,
+        },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user details");
+      }
+
+      const userData = await userResponse.json();
+      const isAdmin = userData.user.is_admin === true;
+
+      // Step 3: Update admin status and navigate
+      setStatus(isAdmin);
+      navigate('/');
+    } catch (error) {
+      setError(error.message || "Something went wrong. Please try again.");
+      console.error("Login error:", error);
+    }
+  };
 
   return (
     <>
@@ -50,13 +73,33 @@ function LoginPage({ setStatus }) {
             <form className="login-form">
               <h1 className="login-title">Login</h1>
 
+              {error && <div className="login-error">{error}</div>}
+
               <label htmlFor="username" className="login-label">Username</label>
-              <input type="text" value={login} onChange={(e) => getUsername(e.target.value)} id="username" placeholder="Enter your username" className="login-input" required />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                id="username"
+                placeholder="Enter your username"
+                className="login-input"
+                required
+              />
 
               <label htmlFor="password" className="login-label">Password</label>
-              <input type="password" value={password} onChange={(e) => getPassword(e.target.value)} id="password" placeholder="Enter your password" className="login-input" required />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                placeholder="Enter your password"
+                className="login-input"
+                required
+              />
 
-              <button type="submit" onClick={HandleLogin} className="login-button">Log In</button>
+              <button type="submit" onClick={HandleLogin} className="login-button">
+                Log In
+              </button>
             </form>
           </div>
         </div>

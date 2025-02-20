@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './land.css';
 
 import videoSource from '../assets/background-video.mp4';
 import InstaIcon from '../components/InstaIcon';
 import LinkIcon from '../components/LinkIcon';
 
-function LandingPage({ isAdmin, isUser, onLogout }) {
+export default function LandingPage({ isAdmin, onLogout }) {
     const navigate = useNavigate();
     const [showPlayerForm, setShowPlayerForm] = useState(false);
     const [playerData, setPlayerData] = useState({
@@ -15,6 +15,48 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
         login: ''
     });
     const [isPlayerRegistered, setIsPlayerRegistered] = useState(false); // New state to track player registration
+    useEffect(() => {
+        const check_auth = () => {
+            const access_token = localStorage.getItem("accessToken");
+            const refresh_token = localStorage.getItem("refreshToken");
+            if (access_token == undefined || refresh_token == undefined) {
+                navigate('/login');
+            }
+        }
+        const checkPlayerStatus = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/players/me/', {
+                    method: "GET",
+                    headers: {
+                        "Content-type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+                    },
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch player status");
+                }
+                
+                const data = await response.json();
+                console.log(data)
+                // if (data.is_player == 'true') {
+                //     setIsPlayerRegistered(true)
+                // }
+                // else {
+                //     setIsPlayerRegistered(false)
+                // }
+                setIsPlayerRegistered(data.is_player); 
+                // setIsPlayerRegistered(data.is_player == 'true');
+                console.log(isPlayerRegistered)
+            } catch (error) {
+                console.error("Error checking player status:", error);
+            }
+        };
+
+        checkPlayerStatus();
+        check_auth();
+    }, []);
 
     function handleLoginClick() {
         navigate('/login');
@@ -37,10 +79,10 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
     }
 
     function handleLogout() {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("refreshToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         onLogout();
-        navigate('/');
+        navigate('/login');
     }
 
     function handleRegisterAsPlayer() {
@@ -52,18 +94,42 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
         setPlayerData(prev => ({ ...prev, [name]: value }));
     }
 
-    function handlePlayerFormSubmit(event) {
+    const handlePlayerFormSubmit = async (event) => {
         event.preventDefault();
-        // Handle form submission (e.g., send data to an API)
         console.log("Player Data:", playerData);
-        setIsPlayerRegistered(true); // Set player registration to true
-        setShowPlayerForm(false);
-        setPlayerData({ first_name: '', last_name: '', login: '' });
+
+        try {
+            const createPlayerResponse = await fetch('http://localhost:8000/api/players/create/', {
+                method: "POST",
+                body: JSON.stringify(playerData),
+                headers: {
+                    "Content-type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+                },
+            });
+
+            if (!createPlayerResponse.ok) {
+                throw new Error("Invalid username or password");
+            }
+
+            const responseData = await createPlayerResponse.json();
+            console.log("Player created successfully:", responseData);
+
+            // Update state after successful registration
+            setIsPlayerRegistered(true);
+            setShowPlayerForm(false);
+            setPlayerData({ first_name: '', last_name: '', login: '' });
+
+        } catch (error) {
+            console.error("Error creating player:", error);
+            // Handle error state or display error message to the user
+        }
     }
 
     function handlePlayerFormCancel() {
         setShowPlayerForm(false);
-        setPlayerData({ first_name: '', lastName: '', login: '' });
+        setPlayerData({ first_name: '', last_name: '', login: '' });
     }
 
     return (
@@ -97,66 +163,18 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
                             <>
                                 <img alt="" src="https://api.dicebear.com/9.x/avataaars/svg?seed=Aidan" width="100px"/>
                                 <h1>Welcome Admin</h1>
-                                {/* {!isPlayerRegistered && (
-                                    <button className="player" role="button" onClick={handleRegisterAsPlayer}>Be a Player</button>
-                                )}
-                                {isPlayerRegistered && <p>You're a player</p>} */}
-                                <button className="button-4" role="button" onClick={handleLogout}>Logout</button>
-                            </>
-                        ) : isUser ? (
-                            <>
-                                <img alt="" src="https://api.dicebear.com/9.x/avataaars/svg?seed=sdsd" width="100px"/>
-                                <h1>Welcome</h1>
-                                {!isPlayerRegistered && (
-                                    <button className="player-reg" role="button" onClick={handleRegisterAsPlayer}>Be a Player</button>
-                                )}
-                                {isPlayerRegistered && <p>You're a player</p>}
                                 <button className="button-4" role="button" onClick={handleLogout}>Logout</button>
                             </>
                         ) : (
                             <>
-                                <h1>LeetSportify</h1>
-                                <p>At this Club, we celebrate teamwork, passion, and the love of the game. Whether you're a player, a fan, or part of our community, join us as we strive for excellence on and off the pitch. Explore our matches, meet our players, and be part of the action!</p>
-                                <div className="button-container">
-                                    <button onClick={handleLoginClick}>
-                                        <span className="span-mother">
-                                            <span>L</span>
-                                            <span>o</span>
-                                            <span>g</span>
-                                            <span>i</span>
-                                            <span>n</span>
-                                        </span>
-                                        <span className="span-mother2">
-                                            <span>L</span>
-                                            <span>o</span>
-                                            <span>g</span>
-                                            <span>i</span>
-                                            <span>n</span>
-                                        </span>
-                                    </button>
-                                    <button onClick={handleRegisterClick}>
-                                        <span className="span-mother">
-                                            <span>R</span>
-                                            <span>e</span>
-                                            <span>g</span>
-                                            <span>i</span>
-                                            <span>s</span>
-                                            <span>t</span>
-                                            <span>e</span>
-                                            <span>r</span>
-                                        </span>
-                                        <span className="span-mother2">
-                                            <span>R</span>
-                                            <span>e</span>
-                                            <span>g</span>
-                                            <span>i</span>
-                                            <span>s</span>
-                                            <span>t</span>
-                                            <span>e</span>
-                                            <span>r</span>
-                                        </span>
-                                    </button>
-                                </div>
+                                <img alt="" src="https://api.dicebear.com/9.x/avataaars/svg?seed=sdsd" width="100px"/>
+                                <h1>Welcome</h1>
+                                {!
+                                isPlayerRegistered && (
+                                    <button className="player-reg" role="button" onClick={handleRegisterAsPlayer}>Be a Player</button>
+                                )}
+                                {isPlayerRegistered && <p>You're a player</p>}
+                                <button className="button-4" role="button" onClick={handleLogout}>Logout</button>
                             </>
                         )}
                     </div>
@@ -176,7 +194,7 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
                             <input id="first_name" className="input" type="text" placeholder="First Name" name="first_name" value={playerData.first_name} onChange={handlePlayerFormChange} required />
                         </div>
                         <div className="input-container ic1">
-                            <input id="lastName" className="input" type="text" placeholder="Last Name" name="lastName" value={playerData.last_name} onChange={handlePlayerFormChange} required />
+                            <input id="last_name" className="input" type="text" placeholder="Last Name" name="last_name" value={playerData.last_name} onChange={handlePlayerFormChange} required />
                         </div>
                         <div className="input-container ic1">
                             <input id="login" className="input" type="text" placeholder="Login" name="login" value={playerData.login} onChange={handlePlayerFormChange} required />
@@ -191,5 +209,3 @@ function LandingPage({ isAdmin, isUser, onLogout }) {
         </>
     );
 }
-
-export default LandingPage;
